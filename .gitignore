@@ -3,6 +3,8 @@
 *.war
 *.ear
 *.class
+.idea/
+*.iml
 
 # eclipse specific git ignore
 *.pydevproject

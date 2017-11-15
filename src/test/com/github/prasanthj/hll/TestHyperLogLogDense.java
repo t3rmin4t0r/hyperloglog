@@ -1,11 +1,9 @@
 /**
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Copyright 2017 Prasanth Jayachandran
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,7 +14,7 @@
  * limitations under the License.
  */
 
-package hyperloglog;
+package com.github.prasanthj.hll;
 
 import static org.junit.Assert.assertEquals;
 
@@ -32,15 +30,15 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(value = Parameterized.class)
-public class TestHyperLogLogSparse {
+public class TestHyperLogLogDense {
 
-  // 5% tolerance for long range bias and 0.5% for short range bias
+  // 5% tolerance for long range bias and 3% for short range bias
   private float longRangeTolerance = 5.0f;
-  private float shortRangeTolerance = 0.5f;
+  private float shortRangeTolerance = 3.0f;
 
   private int size;
 
-  public TestHyperLogLogSparse(int n) {
+  public TestHyperLogLogDense(int n) {
     this.size = n;
   }
 
@@ -54,7 +52,7 @@ public class TestHyperLogLogSparse {
   @Test
   public void testHLLAdd() {
     Random rand = new Random(size);
-    HyperLogLog hll = HyperLogLog.builder().build();
+    HyperLogLog hll = HyperLogLog.builder().setEncoding(HyperLogLog.EncodingType.DENSE).build();
     int size = 100;
     for (int i = 0; i < size; i++) {
       hll.addLong(rand.nextLong());
@@ -67,7 +65,7 @@ public class TestHyperLogLogSparse {
   @Test
   public void testHLLAddHalfDistinct() {
     Random rand = new Random(size);
-    HyperLogLog hll = HyperLogLog.builder().build();
+    HyperLogLog hll = HyperLogLog.builder().setEncoding(HyperLogLog.EncodingType.DENSE).build();
     int unique = size / 2;
     Set<Long> hashset = new HashSet<Long>();
     for (int i = 0; i < size; i++) {
@@ -79,4 +77,5 @@ public class TestHyperLogLogSparse {
     double delta = threshold * hashset.size() / 100;
     assertEquals((double) hashset.size(), (double) hll.count(), delta);
   }
+
 }

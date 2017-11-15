@@ -1,11 +1,9 @@
 /**
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Copyright 2017 Prasanth Jayachandran
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,11 +14,10 @@
  * limitations under the License.
  */
 
-package hyperloglog.tools;
+package com.github.prasanthj.hll.tools;
 
-import hyperloglog.HyperLogLog;
-import hyperloglog.HyperLogLog.EncodingType;
-import hyperloglog.HyperLogLogUtils;
+import com.github.prasanthj.hll.HyperLogLog;
+import com.github.prasanthj.hll.HyperLogLogUtils;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -52,9 +49,8 @@ public class HyperLogLogCLI {
     CommandLine cli = null;
     long n = 0;
     long seed = 123;
-    EncodingType enc = EncodingType.SPARSE;
+    HyperLogLog.EncodingType enc = HyperLogLog.EncodingType.SPARSE;
     int p = 14;
-    int hb = 64;
     boolean bitPack = true;
     boolean noBias = true;
     int unique = -1;
@@ -82,8 +78,8 @@ public class HyperLogLogCLI {
 
       if (cli.hasOption('e')) {
         String value = cli.getOptionValue('e');
-        if (value.equals(EncodingType.DENSE.name())) {
-          enc = EncodingType.DENSE;
+        if (value.equals(HyperLogLog.EncodingType.DENSE.name())) {
+          enc = HyperLogLog.EncodingType.DENSE;
         }
       }
 
@@ -93,10 +89,6 @@ public class HyperLogLogCLI {
           System.out.println("Warning! Out-of-range value specified for p. Using to p=14.");
           p = 14;
         }
-      }
-
-      if (cli.hasOption('h')) {
-        hb = Integer.parseInt(cli.getOptionValue('h'));
       }
 
       if (cli.hasOption('c')) {
@@ -153,7 +145,7 @@ public class HyperLogLogCLI {
 
       // construct hll and serialize it if required
       HyperLogLog hll = HyperLogLog.builder().enableBitPacking(bitPack).enableNoBias(noBias)
-          .setEncoding(enc).setNumHashBits(hb).setNumRegisterIndexBits(p).build();
+          .setEncoding(enc).setNumRegisterIndexBits(p).build();
 
       if (br != null) {
         Set<String> hashset = new HashSet<String>();
@@ -206,7 +198,6 @@ public class HyperLogLogCLI {
   private static void addOptions(Options options) {
     options.addOption("p", "num-register-bits", true, "number of bits from "
         + "hashcode used as register index between 4 and 16 (both inclusive). " + "default = 14");
-    options.addOption("h", "num-hash-bits", true, "number of hashcode bits. " + "default = 64");
     options.addOption("e", "encoding", true, "specify encoding to use (SPARSE "
         + "or DENSE). default = SPARSE");
     options.addOption("b", "enable-bitpacking", true, "enable bit-packing of"
